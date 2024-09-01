@@ -29,7 +29,7 @@ class InterfacePlugin(InterfaceAction):
             temp_dir = tempfile.mkdtemp()
 
             # Get the path of the plugin zip file
-            plugin_zip_path = os.path.join(os.path.dirname(__file__), 'PDF to Image Converter Plugin.zip')
+            plugin_zip_path = os.path.join(os.path.dirname(__file__))
 
             # Extract the Tesseract folder from the zip file
             with zipfile.ZipFile(plugin_zip_path, 'r') as zip_ref:
@@ -44,7 +44,7 @@ class InterfacePlugin(InterfaceAction):
             return f'Error during Tesseract extraction: {e}'
 
     def convert_pdf_to_images(self, pdf_path, output_folder):
-       with self.interface_action_base_plugin: 
+     with self.interface_action_base_plugin:
         from pdf2image import convert_from_path
         '''Convert PDF to images, split double-page images, and save them in a structured folder.'''
         try:
@@ -52,9 +52,9 @@ class InterfacePlugin(InterfaceAction):
 
             # Create the output folder named after the input file (without extension)
             input_file_name = os.path.splitext(os.path.basename(pdf_path))[0]
-            output_folder = os.path.join(output_folder, input_file_name, 'img')
+            image_output_folder = os.path.join(output_folder, input_file_name, 'img')
 
-            os.makedirs(output_folder, exist_ok=True)
+            os.makedirs(image_output_folder, exist_ok=True)
 
             images = convert_from_path(pdf_path, poppler_path=poppler_path)
 
@@ -80,27 +80,27 @@ class InterfacePlugin(InterfaceAction):
                 right_page = image.crop((width // 2, 0, width, height))  # Right half of the image
 
                 # Save the left page
-                left_image_path = os.path.join(output_folder, f'page_{page_counter}.png')
+                left_image_path = os.path.join(image_output_folder, f'page_{page_counter}.png')
                 left_page.save(left_image_path, 'PNG')
                 page_counter += 1
 
                 # Save the right page
-                right_image_path = os.path.join(output_folder, f'page_{page_counter}.png')
+                right_image_path = os.path.join(image_output_folder, f'page_{page_counter}.png')
                 right_page.save(right_image_path, 'PNG')
                 page_counter += 1
 
             # Extract Tesseract and perform OCR on the images
             tesseract_dir = self.extract_tesseract()
-            ocr_result = self.perform_ocr_on_images(output_folder, tesseract_dir)
+            ocr_result = self.perform_ocr_on_images(output_folder, input_file_name, tesseract_dir)
 
             # Clean up temporary Tesseract directory
             shutil.rmtree(tesseract_dir)
 
-            return f'Conversion successful! {page_counter - 1} images saved in: {output_folder}. {ocr_result}'
+            return f'Conversion successful! {page_counter - 1} images saved in: {image_output_folder}. {ocr_result}'
         except Exception as e:
             return f'Error during conversion: {e}'
 
-    def perform_ocr_on_images(self, image_folder, tesseract_dir):
+    def perform_ocr_on_images(self, output_folder, input_file_name, tesseract_dir):
        with self.interface_action_base_plugin: 
         import pytesseract
         '''Perform OCR on images in the folder and save the text results.'''
@@ -108,8 +108,11 @@ class InterfacePlugin(InterfaceAction):
             # Specify the path to tesseract executable inside the extracted folder
             pytesseract.pytesseract.tesseract_cmd = os.path.join(tesseract_dir, 'tesseract.exe')
 
-            text_output_folder = os.path.join(image_folder, 'ocr_text')
-            os.makedirs(text_output_folder, exist_ok=True)
+            # Set the OCR text output folder next to the image folder
+            ocr_output_folder = os.path.join(output_folder, input_file_name, '_ocr')
+            os.makedirs(ocr_output_folder, exist_ok=True)
+
+            image_folder = os.path.join(output_folder, input_file_name, 'img')
 
             # Iterate over the images in the folder
             for image_file in os.listdir(image_folder):
@@ -120,10 +123,10 @@ class InterfacePlugin(InterfaceAction):
                     ocr_text = pytesseract.image_to_string(Image.open(image_path))
 
                     # Save the OCR text to a file
-                    text_file_path = os.path.join(text_output_folder, f'{os.path.splitext(image_file)[0]}.txt')
+                    text_file_path = os.path.join(ocr_output_folder, f'{os.path.splitext(image_file)[0]}.txt')
                     with open(text_file_path, 'w', encoding='utf-8') as text_file:
                         text_file.write(ocr_text)
 
-            return f'OCR completed! Text saved in: {text_output_folder}'
+            return f'OCR completed! Text saved in: {ocr_output_folder}'
         except Exception as e:
             return f'Error during OCR: {e}'
