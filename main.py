@@ -7,19 +7,19 @@ import shutil
 import re
 
 class InterfacePlugin(InterfaceAction):
-    name = 'PDF to Image Converter'
+    name = 'Image-based PDF Processor Calibre Plugin'
 
-    action_spec = ('PDF to Image Converter', None, 'Convert PDF to images', 'Ctrl+Shift+I')
+    action_spec = ('Image-based PDF Processor Calibre Plugin', None, 'Convert PDF to images and text', 'Ctrl+Shift+I')
 
     def genesis(self):
         '''Initial setup for the plugin.'''
-        icon = get_icons('images/icon.png', 'PDF to Image Converter Plugin')
+        icon = get_icons('images/icon.png', 'Image-based PDF Processor Calibre Plugin')
         self.qaction.setIcon(icon)
         self.qaction.triggered.connect(self.show_dialog)
 
     def show_dialog(self):
         '''Show the main UI dialog for PDF conversion.'''
-        from calibre_plugins.pdf_to_image.ui import PDFConverterDialog
+        from calibre_plugins.image_based_pdf_processor.ui import PDFConverterDialog
         d = PDFConverterDialog(self.gui, self.qaction.icon(), self)
         d.show()
 

@@ -1,14 +1,14 @@
 from qt.core import QDialog, QLabel, QPushButton, QVBoxLayout, QFileDialog, QLineEdit
 
 class PDFConverterDialog(QDialog):
-    '''Main dialog for the PDF to Image converter plugin.'''
+    '''Main dialog for the Image-based PDF Processor plugin.'''
 
     def __init__(self, gui, icon, plugin):
         QDialog.__init__(self, gui)
         self.gui = gui
         self.plugin = plugin  # Store the plugin instance
         self.setWindowIcon(icon)
-        self.setWindowTitle('PDF to Image Converter')
+        self.setWindowTitle('Image-based PDF Processor')
 
         # Layout
         self.layout = QVBoxLayout(self)
@@ -32,7 +32,7 @@ class PDFConverterDialog(QDialog):
         self.layout.addWidget(self.selectOutputButton)
 
         # Convert button
-        self.convertButton = QPushButton('Convert PDF to Images', self)
+        self.convertButton = QPushButton('Start Processing', self)
         self.convertButton.clicked.connect(self.convert_pdf_to_images)
         self.layout.addWidget(self.convertButton)
 
