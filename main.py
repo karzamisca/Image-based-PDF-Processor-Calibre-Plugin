@@ -1,10 +1,10 @@
-from calibre.gui2.actions import InterfaceAction
-from PIL import Image
-import os
-import zipfile
-import tempfile
-import shutil
-import re
+from calibre.gui2.actions import InterfaceAction #Built-in for Calibre 7.17
+from PIL import Image #v10.4.0 
+import os #Built-in for Python 3.12.6
+import zipfile #Built-in for Python 3.12.6
+import tempfile #Built-in for Python 3.12.6
+import shutil #Built-in for Python 3.12.6
+import re #Built-in for Python 3.12.6
 
 class InterfacePlugin(InterfaceAction):
     name = 'Image-based PDF Processor Calibre Plugin'
@@ -48,7 +48,7 @@ class InterfacePlugin(InterfaceAction):
         '''Convert PDF to images, split double-page images, and save them in a structured folder.'''
         try:
            with self.interface_action_base_plugin: 
-            from pdf2image import convert_from_path
+            from pdf2image import convert_from_path #v1.17.0
             # Poppler path configuration
             poppler_path = get_resources('poppler-24.07.0/Library/bin')
 
@@ -109,7 +109,7 @@ class InterfacePlugin(InterfaceAction):
         '''Perform OCR on images in the folder and save the text results.'''
         try:
            with self.interface_action_base_plugin: 
-            import pytesseract
+            import pytesseract #v0.3.13
             # Specify the path to tesseract executable inside the extracted folder
             pytesseract.pytesseract.tesseract_cmd = os.path.join(tesseract_dir, 'tesseract.exe')
 

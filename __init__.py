@@ -1,4 +1,4 @@
-from calibre.customize import InterfaceActionBase
+from calibre.customize import InterfaceActionBase #Built-in for Calibre 7.17
 
 class InterfacePluginDemo(InterfaceActionBase):
     '''

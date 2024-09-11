@@ -1,4 +1,4 @@
-from qt.core import QDialog, QLabel, QPushButton, QVBoxLayout, QFileDialog, QLineEdit
+from qt.core import QDialog, QLabel, QPushButton, QVBoxLayout, QFileDialog, QLineEdit #Built-in for Calibre 7.17
 
 class PDFConverterDialog(QDialog):
     '''Main dialog for the Image-based PDF Processor plugin.'''
