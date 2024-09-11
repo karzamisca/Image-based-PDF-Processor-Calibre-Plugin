@@ -1,3 +1,5 @@
+### WARNING: REMEMBER TO CHECK FOR AND ADD BACK MISSING TESSERACT-OCR FOLDER BEFORE USING
+
 ### Image-based PDF Processor Calibre Plugin
 
 ### 1. **__init__.py**
